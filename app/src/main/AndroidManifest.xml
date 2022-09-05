@@ -5,7 +5,6 @@
     android:sharedUserId="android.uid.system">
 
     <uses-permission android:name="android.permission.INJECT_EVENTS" />
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
@@ -16,6 +15,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
+        android:name=".APP"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -23,18 +23,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:name=".APP"
         android:theme="@style/Theme.Test_webrtc"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".srs.SrsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".PullMoreActivity"
-            android:exported="false" />
-        <activity
-            android:name=".PushByMediaProjectionManagerActivity"
+            android:name=".pull.PullChooseActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
@@ -46,16 +39,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PullActivity"
+            android:name=".pull.PullActivity"
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar" />
-        <activity android:name=".PushByReflectionActivity" />
-        <activity android:name=".TestActivity" />
 
         <service
-            android:name=".MediaProjectionForegroundService"
-            android:foregroundServiceType="mediaProjection" />
-        <service
-            android:name=".PushByMediaProjectionManagerService"
+            android:name=".push.PushService"
             android:foregroundServiceType="mediaProjection" />
     </application>
 

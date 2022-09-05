@@ -3,15 +3,21 @@ package com.brigitttta.remote_screencast
 import android.content.Intent
 import android.media.projection.MediaProjectionManager
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.getSystemService
-import com.brigitttta.remote_screencast.srs.SrsActivity
+import androidx.lifecycle.lifecycleScope
+import com.brigitttta.remote_screencast.pull.PullChooseActivity
+import com.brigitttta.remote_screencast.push.PushService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {
+    private val context = this
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,44 +35,48 @@ class MainActivity : AppCompatActivity() {
 //                .penaltyLog()
 //                .penaltyDeath()
 //                .build())
+
+        val pushStart = findViewById<Button>(R.id.btn_push_start)
+        val pushStop = findViewById<Button>(R.id.btn_push_stop)
+        val pull = findViewById<Button>(R.id.btn_pull)
+
         val registerMediaProjectionPermission = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
-                PushByMediaProjectionManagerService.start(this, it.data)
-
-                runOnUiThread {
-                    Toast.makeText(this, "service start finish", Toast.LENGTH_LONG).show()
+                PushService.start(this, it.data)
+                lifecycleScope.launch(Dispatchers.Main) {
+                    Toast.makeText(context, "开始运行投屏服务并等待连接", Toast.LENGTH_LONG).show()
                 }
             } else {
-                runOnUiThread {
-                    Toast.makeText(this, "Need Media Projection Permission", Toast.LENGTH_LONG).show()
+                lifecycleScope.launch(Dispatchers.Main) {
+                    Toast.makeText(context, "需要媒体投影许可才可使用", Toast.LENGTH_LONG).show()
                 }
             }
         }
 
-
-        findViewById<Button>(R.id.btn_push_mediaProjectionManager).setOnClickListener {
-            startActivity(Intent(this, PushByMediaProjectionManagerActivity::class.java))
-        }
-        findViewById<Button>(R.id.btn_push_mediaProjectionManager_service).setOnClickListener {
+        pushStart.setOnClickListener {
             val mediaProjectionManager = getSystemService<MediaProjectionManager>()
             registerMediaProjectionPermission.launch(mediaProjectionManager?.createScreenCaptureIntent())
         }
-        findViewById<Button>(R.id.btn_push_reflection).isEnabled = false
-        findViewById<Button>(R.id.btn_push_reflection).setOnClickListener {
-            startActivity(Intent(this, PushByReflectionActivity::class.java))
+        pushStop.setOnClickListener {
+            PushService.stop(this)
         }
-        findViewById<Button>(R.id.btn_pull).setOnClickListener {
-            startActivity(Intent(this, PullActivity::class.java))
+        pull.setOnClickListener {
+            startActivity(Intent(this, PullChooseActivity::class.java))
         }
-        findViewById<Button>(R.id.btn_pull_more).setOnClickListener {
-            startActivity(Intent(this, PullMoreActivity::class.java))
-        }
-        findViewById<Button>(R.id.btn_srs).setOnClickListener {
-            startActivity(Intent(this, SrsActivity::class.java))
-        }
-        findViewById<Button>(R.id.btn_test).isEnabled = false
-        findViewById<Button>(R.id.btn_test).setOnClickListener {
-            startActivity(Intent(this, TestActivity::class.java))
+
+        PushService.state.observe(this) {
+            when (it) {
+                0 -> {
+                    pushStart.visibility = View.VISIBLE
+                    pushStop.visibility = View.GONE
+                    pull.visibility = View.VISIBLE
+                }
+                1 -> {
+                    pushStart.visibility = View.GONE
+                    pushStop.visibility = View.VISIBLE
+                    pull.visibility = View.GONE
+                }
+            }
         }
     }
 }

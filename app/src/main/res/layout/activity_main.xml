@@ -7,48 +7,23 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <Button
+        android:id="@+id/btn_push_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="这是投屏端" />
 
     <Button
-        android:id="@+id/btn_push_mediaProjectionManager"
+        android:id="@+id/btn_push_stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="push mediaProjectionManager" />
-    <Button
-        android:id="@+id/btn_push_mediaProjectionManager_service"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="push mediaProjectionManager_service" />
+        android:text="结束投屏" />
 
-    <Button
-        android:id="@+id/btn_push_reflection"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="push reflection" />
 
     <Button
         android:id="@+id/btn_pull"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="pull" />
-
-    <Button
-        android:id="@+id/btn_pull_more"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="pull more" />
-
-    <Button
-        android:id="@+id/btn_srs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="srs" />
-
-
-    <Button
-        android:id="@+id/btn_test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="test" />
-
+        android:text="这是控制端" />
 
 </LinearLayout>
