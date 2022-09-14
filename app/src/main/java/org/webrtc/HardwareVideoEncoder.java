@@ -38,7 +38,7 @@ class HardwareVideoEncoder implements VideoEncoder {
 
   // Bitrate modes - should be in sync with OMX_VIDEO_CONTROLRATETYPE defined
   // in OMX_Video.h
-  private static final int VIDEO_ControlRateConstant = 2;
+  private static final int VIDEO_ControlRateConstant = MediaCodecInfo.EncoderCapabilities.BITRATE_MODE_CBR;
   // Key associated with the bitrate control mode value (above). Not present as a MediaFormat
   // constant until API level 21.
   private static final String KEY_BITRATE_MODE = "bitrate-mode";
