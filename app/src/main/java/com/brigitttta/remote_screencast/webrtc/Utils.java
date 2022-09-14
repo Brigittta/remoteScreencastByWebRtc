@@ -14,7 +14,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 public class Utils {
-    static List<MediaCodecs.VideoCodec> videoCodecs = ArrayUtils.asArrayList(MediaCodecs.VideoCodec.H265);
+    static List<MediaCodecs.VideoCodec> videoCodecs = ArrayUtils.asArrayList(MediaCodecs.VideoCodec.H265, MediaCodecs.VideoCodec.VP9, MediaCodecs.VideoCodec.H264, MediaCodecs.VideoCodec.VP8);
     static List<MediaCodecs.AudioCodec> audioCodecs = ArrayUtils.asArrayList(MediaCodecs.AudioCodec.AAC);
 
     static public SessionDescription preferCodecs(SessionDescription sdp, boolean video) {
