@@ -19,6 +19,7 @@ import com.brigitttta.remote_screencast.bean.MotionModel
 import com.brigitttta.remote_screencast.bean.WebrtcMessage
 import com.brigitttta.remote_screencast.webrtc.SimplePeerConnectionObserver
 import com.brigitttta.remote_screencast.webrtc.SimpleSdpObserver
+import com.brigitttta.remote_screencast.webrtc.Utils
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInitializer
@@ -189,8 +190,11 @@ class PullActivity : AppCompatActivity() {
                                                 peerConnection?.setRemoteDescription(SimpleSdpObserver("pull-setRemoteDescription"), webrtcMessage.description)
                                                 peerConnection?.createAnswer(object : SimpleSdpObserver("pull-createAnswer") {
                                                     override fun onCreateSuccess(description: SessionDescription) {
-                                                        peerConnection?.setLocalDescription(SimpleSdpObserver("pull-setLocalDescription"), description)
-                                                        ctx.writeAndFlush(WebrtcMessage(type = WebrtcMessage.Type.SDP, description = description).toString())
+                                                        var localSdp = description
+                                                        localSdp = Utils.preferCodecs(localSdp, true)
+                                                        localSdp = Utils.preferCodecs(localSdp, false)
+                                                        peerConnection?.setLocalDescription(SimpleSdpObserver("pull-setLocalDescription"), localSdp)
+                                                        ctx.writeAndFlush(WebrtcMessage(type = WebrtcMessage.Type.SDP, description = localSdp).toString())
                                                     }
                                                 }, MediaConstraints())
                                             }

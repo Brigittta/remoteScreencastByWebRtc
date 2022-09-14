@@ -22,6 +22,7 @@ import com.brigitttta.remote_screencast.R
 import com.brigitttta.remote_screencast.bean.WebrtcMessage
 import com.brigitttta.remote_screencast.webrtc.SimplePeerConnectionObserver
 import com.brigitttta.remote_screencast.webrtc.SimpleSdpObserver
+import com.brigitttta.remote_screencast.webrtc.Utils
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInitializer
@@ -177,8 +178,11 @@ class PushService : Service() {
                                                 peerConnection?.addTrack(videoTrack)
                                                 peerConnection?.createOffer(object : SimpleSdpObserver("push-createOffer") {
                                                     override fun onCreateSuccess(description: SessionDescription) {
-                                                        peerConnection?.setLocalDescription(SimpleSdpObserver("push-setLocalDescription"), description)
-                                                        ctx.writeAndFlush(WebrtcMessage(type = WebrtcMessage.Type.SDP, description = description).toString())
+                                                        var localSdp = description
+                                                        localSdp = Utils.preferCodecs(localSdp, true)
+                                                        localSdp = Utils.preferCodecs(localSdp, false)
+                                                        peerConnection?.setLocalDescription(SimpleSdpObserver("push-setLocalDescription"), localSdp)
+                                                        ctx.writeAndFlush(WebrtcMessage(type = WebrtcMessage.Type.SDP, description = localSdp).toString())
                                                     }
                                                 }, MediaConstraints())
                                             }
